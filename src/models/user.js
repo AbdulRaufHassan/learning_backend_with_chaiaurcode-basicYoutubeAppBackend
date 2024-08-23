@@ -37,6 +37,7 @@ const userSchema = new Schema(
     },
     refreshToken: {
       type: String,
+      default: ""
     },
     watchHistory: [
       {
@@ -45,7 +46,7 @@ const userSchema = new Schema(
       },
     ],
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 userSchema.pre("save", async function (next) {
