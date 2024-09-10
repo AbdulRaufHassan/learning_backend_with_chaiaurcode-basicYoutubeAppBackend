@@ -2,9 +2,8 @@ import loginSchema from "../../joi/user/login.js";
 import { User } from "../../models/user.js";
 import ApiError from "../../utils/apiError.js";
 import ApiResponse from "../../utils/apiResponse.js";
-import asyncHandler from "../../utils/asyncHandler.js";
 
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { error } = await loginSchema.validateAsync(req.body);
     if (error) {
@@ -37,8 +36,8 @@ const loginUser = asyncHandler(async (req, res) => {
       .cookie("refreshToken", refreshToken, options)
       .json(new ApiResponse(200, userDoc, "user loggedIn successfully"));
   } catch (e) {
-    res.status(400).send({ error: e.message });
+    res.status(400).send(new ApiError(400, e.message));
   }
-});
+};
 
 export default loginUser;
