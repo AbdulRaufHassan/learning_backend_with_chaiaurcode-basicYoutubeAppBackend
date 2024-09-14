@@ -9,19 +9,21 @@ const verifyJwt = async (req, res, next) => {
       req.cookies?.accessToken ||
       req.headers?.authorization?.replace("Bearer ", "");
     if (!token) {
-      new ApiError(401, "unauthorized request");
+      throw new ApiError(401, "unauthorized request");
     }
     const decodedToken = jwt.verify(token, env.JWT_ACCESS_TOKEN_SECRET);
     const findUser = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"
     );
     if (!findUser) {
-      throw new ApiError("Invalid access token");
+      throw new ApiError(401,"Invalid access token");
     }
     req.user = findUser;
     next();
   } catch (e) {
-    res.status(401).send(new ApiError(401, e?.message));
+    res
+      .status(e?.statusCode || 500)
+      .send(new ApiError(e?.statusCode || 500, e?.message));
   }
 };
 

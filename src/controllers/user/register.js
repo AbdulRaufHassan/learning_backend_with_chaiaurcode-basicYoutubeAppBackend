@@ -1,11 +1,10 @@
 import ApiError from "../../utils/apiError.js";
 import ApiResponse from "../../utils/apiResponse.js";
-import asyncHandler from "../../utils/asyncHandler.js";
 import uploadOnCloudinary from "../../utils/cloudinary.js";
 import registerSchema from "../../joi/user/register.js";
 import { User } from "../../models/user.js";
 
-const registerUser = async(req, res) => {
+const registerUser = async (req, res) => {
   try {
     const { error } = await registerSchema.validateAsync(req.body);
     if (error) {
@@ -53,8 +52,9 @@ const registerUser = async(req, res) => {
       .status(201)
       .json(new ApiResponse(201, createdUser, "user register successfully"));
   } catch (e) {
-
-    res.status(400).send(new ApiError(400, e.message || e));
+    res
+      .status(e?.statusCode || 500)
+      .send(new ApiError(e?.statusCode || 500, e?.message));
   }
 };
 

@@ -4,6 +4,7 @@ import upload from "../../middlewares/multer.js";
 import loginUser from "../../controllers/user/login.js";
 import logoutUser from "../../controllers/user/logout.js";
 import verifyJwt from "../../middlewares/verifyJwt.js";
+import refreshTokens from "../../controllers/user/refreshTokens.js";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.post(
 
 router.post("/login",loginUser)
 router.post("/logout",verifyJwt,logoutUser)
+router.post("refreshTokens",refreshTokens)
 
 export default router;
